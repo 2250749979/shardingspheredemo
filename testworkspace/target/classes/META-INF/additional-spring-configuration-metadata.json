@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "spring.shardingsphere.rules.sharding.tables.eb_msgpush_requestlog.actual-data-nodes",
+      "type": "java.lang.String",
+      "description": "Description for spring.shardingsphere.rules.sharding.tables.eb_msgpush_requestlog.actual-data-nodes."
+  }
+] }

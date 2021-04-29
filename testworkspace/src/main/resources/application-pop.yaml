@@ -1,0 +1,55 @@
+spring:
+  profiles:
+    include: mysql
+---
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapperLocations: classpath:mapper/*.xml
+server:
+  port: 8888
+
+spring:
+  profiles: mysql
+  shardingsphere:
+    datasource:
+      names: springboot0,springboot1
+      springboot0:
+        driver-class-name: com.mysql.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:4806/springboot0?autoReconnect=true&characterEncoding=UTF-8&failOverReadOnly=false&serverTimezone=GMT%2B8&useSSL=true&useUnicode=true&verifyServerCertificate=false&zeroDateTimeBehavior=convertToNull
+        password: WEAVERemobile7!@#
+        type: com.alibaba.druid.pool.DruidDataSource
+        username: root
+      springboot1:
+        driver-class-name: com.mysql.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:4806/springboot1?autoReconnect=true&characterEncoding=UTF-8&failOverReadOnly=false&serverTimezone=GMT%2B8&useSSL=true&useUnicode=true&verifyServerCertificate=false&zeroDateTimeBehavior=convertToNull
+        password: WEAVERemobile7!@#
+        type: com.alibaba.druid.pool.DruidDataSource
+        username: root
+    props:
+      sql:
+        show: true
+    sharding:
+      default-data-source-name: springboot0
+      tables:
+        eb_msgpush_requestlog:
+          actualDataNodes: springboot$->{0..1}.eb_msgpush_requestlog2021_0$->{3..4}
+          databaseStrategy:
+            standard:
+              preciseAlgorithmClassName: com.example.algorithm.MyPreciseDBShardingAlgorithm
+              shardingColumn: tenant_key
+          tableStrategy:
+            standard:
+              preciseAlgorithmClassName: com.example.algorithm.MyPreciseTableShardingAlgorithm
+              shardingColumn: tenant_key
+        eb_msgpush_sendlog: #分表名称
+          actualDataNodes: springboot$->{0..1}.eb_msgpush_sendlog2021_0$->{3..4}
+          databaseStrategy:
+            standard:
+              preciseAlgorithmClassName: com.example.algorithm.MyPreciseDBShardingAlgorithm #自定义分库规则
+              shardingColumn: tenant_key #分库主键片
+          tableStrategy:
+            standard:
+              preciseAlgorithmClassName: com.example.algorithm.MyPreciseTableShardingAlgorithm #自定义分表规则
+              shardingColumn: tenant_key #分表主键片

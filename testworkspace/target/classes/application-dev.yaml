@@ -1,0 +1,41 @@
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapperLocations: classpath:mapper/*.xml
+server:
+  port: 8888
+
+spring:
+  profiles:
+    active: log
+  shardingsphere:
+    datasource:
+      names: springboot0,springboot1
+      springboot0:
+        driver-class-name: com.mysql.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:4806/springboot0?characterEncoding=utf-8&useSSL=false
+        password: WEAVERemobile7!@#
+        type: com.zaxxer.hikari.HikariDataSource
+        username: root
+      springboot1:
+        driver-class-name: com.mysql.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:4806/springboot1?characterEncoding=utf-8&useSSL=false
+        password: WEAVERemobile7!@#
+        type: com.zaxxer.hikari.HikariDataSource
+        username: root
+    props:
+      sql:
+        show: true
+    sharding:
+      default-data-source-name: springboot0
+      tables:
+        eb_msgpush_requestlog:
+          actualDataNodes: springboot$->{0..1}.eb_msgpush_requestlog2021_0$->{3..4}
+          databaseStrategy:
+            standard:
+              preciseAlgorithmClassName: com.example.algorithm.MyPreciseDBShardingAlgorithm
+              shardingColumn: tenant_key
+          tableStrategy:
+            standard:
+              preciseAlgorithmClassName: com.example.algorithm.MyPreciseTableShardingAlgorithm
+              shardingColumn: tenant_key
